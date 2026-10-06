@@ -47,41 +47,52 @@ st.markdown("""
     .main-header {
         font-size: 2.2rem;
         font-weight: 700;
-        color: #1E3A5F;
+        color: #F8FAFC;
         text-align: center;
         padding: 1rem 0;
-        border-bottom: 3px solid #2E86AB;
+        border-bottom: 3px solid #0284C7;
         margin-bottom: 1.5rem;
         text-transform: uppercase;
+        letter-spacing: 1px;
     }
     .sub-header {
         font-size: 1.3rem;
         font-weight: 600;
-        color: #2E86AB;
+        color: #38BDF8;
         margin-top: 1.5rem;
         margin-bottom: 0.8rem;
         text-transform: uppercase;
     }
     .kpi-card {
-        background: linear-gradient(135deg, #1E3A5F 0%, #2E86AB 100%);
+        background: linear-gradient(135deg, #0F172A 0%, #1E3A5F 100%);
+        border: 1px solid #334155;
         padding: 1.2rem;
         border-radius: 12px;
         color: white;
         text-align: center;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.3);
     }
     .kpi-value {
-        font-size: 1.8rem;
+        font-size: 1.9rem;
         font-weight: 700;
         margin: 0.3rem 0;
+        color: #F8FAFC;
     }
     .kpi-label {
         font-size: 0.85rem;
-        opacity: 0.9;
+        opacity: 0.85;
         text-transform: uppercase;
+        color: #94A3B8;
+        font-weight: 600;
     }
-    .stSidebar {
-        background-color: #f0f4f8;
+    [data-testid="stSidebar"] {
+        background-color: #0F172A !important;
+    }
+    [data-testid="stSidebar"] * {
+        color: #E2E8F0 !important;
+    }
+    [data-testid="stSidebar"] hr {
+        border-color: #334155 !important;
     }
 </style>
 """, unsafe_allow_html=True)

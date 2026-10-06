@@ -7,6 +7,7 @@ usando variáveis de ambiente.
 
 import os
 import logging
+from urllib.parse import quote_plus
 from sqlalchemy import create_engine, text
 from dotenv import load_dotenv
 
@@ -22,7 +23,7 @@ def get_oltp_url() -> str:
     port = os.getenv("OLTP_PORT", "5432")
     database = os.getenv("OLTP_DATABASE", "techpop_oltp")
     user = os.getenv("OLTP_USER", "postgres")
-    password = os.getenv("OLTP_PASSWORD", "postgres")
+    password = quote_plus(os.getenv("OLTP_PASSWORD", "postgres"))
     return f"postgresql+psycopg2://{user}:{password}@{host}:{port}/{database}"
 
 
@@ -32,7 +33,7 @@ def get_dw_url() -> str:
     port = os.getenv("DW_PORT", "5432")
     database = os.getenv("DW_DATABASE", "techpop_dw")
     user = os.getenv("DW_USER", "postgres")
-    password = os.getenv("DW_PASSWORD", "postgres")
+    password = quote_plus(os.getenv("DW_PASSWORD", "postgres"))
     return f"postgresql+psycopg2://{user}:{password}@{host}:{port}/{database}"
 
 
@@ -64,5 +65,5 @@ def get_postgres_admin_url() -> str:
     host = os.getenv("OLTP_HOST", "localhost")
     port = os.getenv("OLTP_PORT", "5432")
     user = os.getenv("OLTP_USER", "postgres")
-    password = os.getenv("OLTP_PASSWORD", "postgres")
+    password = quote_plus(os.getenv("OLTP_PASSWORD", "postgres"))
     return f"postgresql+psycopg2://{user}:{password}@{host}:{port}/postgres"

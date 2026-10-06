@@ -55,7 +55,7 @@ def save_chart(fig, filename: str):
     fig.tight_layout()
     fig.savefig(filepath, bbox_inches="tight", facecolor="white")
     plt.close(fig)
-    print(f"  ✓ SALVO: {filepath}")
+    print(f"  [OK] SALVO: {filepath}")
 
 
 def chart_01_produtos_mais_vendidos(engine):

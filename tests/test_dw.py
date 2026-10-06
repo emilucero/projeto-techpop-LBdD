@@ -14,14 +14,14 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import pytest
 import pandas as pd
 from sqlalchemy import text
-from config.database import get_dw_engine, test_connection
+from config.database import get_dw_engine, test_connection as check_db_connection
 
 
 @pytest.fixture(scope="module")
 def engine():
     """Engine do DW para os testes."""
     eng = get_dw_engine()
-    if not test_connection(eng, "DW"):
+    if not check_db_connection(eng, "DW"):
         pytest.skip("DW NÃO DISPONÍVEL")
     return eng
 
@@ -75,10 +75,10 @@ class TestFactLoading:
         count = _count_table(engine, "fato_vendas")
         assert count > 0, "FATO_VENDAS ESTÁ VAZIA"
 
-    def test_fato_vendas_25_registros(self, engine):
-        """FATO_VENDAS deve ter 25 registros (um por item de venda)."""
+    def test_fato_vendas_28_registros(self, engine):
+        """FATO_VENDAS deve ter 28 registros (um por item de venda)."""
         count = _count_table(engine, "fato_vendas")
-        assert count == 25, f"ESPERADO 25, ENCONTRADO {count}"
+        assert count == 28, f"ESPERADO 28, ENCONTRADO {count}"
 
     def test_sem_duplicidades(self, engine):
         """Não deve haver duplicidades (sales_id + item_id)."""
@@ -96,7 +96,7 @@ class TestFactLoading:
         """Ao recarregar, não deve criar duplicações."""
         count_before = _count_table(engine, "fato_vendas")
         # Se a contagem está correta, o processo é idempotente
-        assert count_before == 25, f"CONTAGEM INCORRETA: {count_before}"
+        assert count_before == 28, f"CONTAGEM INCORRETA: {count_before}"
 
 
 class TestForeignKeys:

@@ -38,6 +38,12 @@ def create_databases():
     """Cria os bancos techpop_oltp e techpop_dw se não existirem."""
     logger.info("VERIFICANDO/CRIANDO BANCOS DE DADOS...")
     
+    oltp_db = os.getenv("OLTP_DATABASE", "techpop_oltp")
+    dw_db = os.getenv("DW_DATABASE", "techpop_dw")
+    if oltp_db == "postgres" and dw_db == "postgres":
+        logger.info("UTILIZANDO BANCO UNIFICADO 'postgres' (SUPABASE/CLOUD). PULANDO CRIAÇÃO DE BANCOS.")
+        return True
+
     try:
         admin_engine = create_engine(get_postgres_admin_url(), isolation_level="AUTOCOMMIT")
         
@@ -57,6 +63,21 @@ def create_databases():
     except Exception as e:
         logger.error(f"ERRO AO CRIAR BANCOS: {e}")
         return False
+
+
+def execute_sql_file(conn, file_path: Path):
+    """Executa um arquivo SQL tratando comentários e delimitadores."""
+    sql_text = file_path.read_text(encoding="utf-8")
+    clean_lines = []
+    for line in sql_text.splitlines():
+        line_clean = line.strip()
+        if not line_clean.startswith("--"):
+            clean_lines.append(line)
+    clean_sql = "\n".join(clean_lines)
+    for statement in clean_sql.split(";"):
+        statement = statement.strip()
+        if statement:
+            conn.execute(text(statement))
 
 
 def setup_oltp():
@@ -86,20 +107,12 @@ def setup_oltp():
             
             # Executar DDL
             ddl_file = sql_dir / "01_create_oltp.sql"
-            ddl_sql = ddl_file.read_text(encoding="utf-8")
-            for statement in ddl_sql.split(";"):
-                statement = statement.strip()
-                if statement and not statement.startswith("--"):
-                    conn.execute(text(statement))
+            execute_sql_file(conn, ddl_file)
             logger.info("DDL DO OLTP EXECUTADO.")
             
             # Executar DML
             dml_file = sql_dir / "02_insert_oltp.sql"
-            dml_sql = dml_file.read_text(encoding="utf-8")
-            for statement in dml_sql.split(";"):
-                statement = statement.strip()
-                if statement and not statement.startswith("--"):
-                    conn.execute(text(statement))
+            execute_sql_file(conn, dml_file)
             logger.info("DML DO OLTP EXECUTADO.")
         
         oltp_engine.dispose()
@@ -120,20 +133,12 @@ def setup_dw():
         with dw_engine.begin() as conn:
             # Executar DDL
             ddl_file = sql_dir / "01_create_dw.sql"
-            ddl_sql = ddl_file.read_text(encoding="utf-8")
-            for statement in ddl_sql.split(";"):
-                statement = statement.strip()
-                if statement and not statement.startswith("--"):
-                    conn.execute(text(statement))
+            execute_sql_file(conn, ddl_file)
             logger.info("DDL DO DW EXECUTADO.")
             
             # Executar índices
             idx_file = sql_dir / "02_indexes.sql"
-            idx_sql = idx_file.read_text(encoding="utf-8")
-            for statement in idx_sql.split(";"):
-                statement = statement.strip()
-                if statement and not statement.startswith("--"):
-                    conn.execute(text(statement))
+            execute_sql_file(conn, idx_file)
             logger.info("ÍNDICES DO DW CRIADOS.")
         
         dw_engine.dispose()
