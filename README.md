@@ -316,19 +316,6 @@ UNION ALL SELECT 'DIM_PRODUTO', COUNT(*) FROM dim_produto
 UNION ALL SELECT 'FATO_VENDAS', COUNT(*) FROM fato_vendas;
 ```
 
-## 📋 INSTRUÇÕES PARA APRESENTAÇÃO
-
-1. Mostre o **modelo dimensional** (`docs/modelo_dimensional.md`)
-2. Execute `python main.py` para demonstrar o **ETL**
-3. Mostre o **relatório de consistência** gerado pelo ETL
-4. Execute consultas SQL no `techpop_dw` para mostrar os **dados**
-5. Execute `streamlit run dashboard/app.py` para o **dashboard**
-6. Demonstre os **filtros temporais** (ANO, TRIMESTRE, MÊS)
-7. Mostre os **gráficos PNG** em `reports/outputs/`
-8. Execute `pytest tests/ -v` para os **testes**
-
-## 📝 NOTAS IMPORTANTES
-
 - **Fornecedores por estado**: Como fornecedor não possui data de cadastro no OLTP, a análise temporal considera fornecedores associados aos itens de vendas no período.
 - **Clientes por estado**: Quando filtrado temporalmente, considera clientes envolvidos nas vendas do período.
 - **Dados**: Todos os dados são os fornecidos pelo professor. Nenhum dado adicional foi inventado.
